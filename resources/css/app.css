@@ -1,0 +1,50 @@
+/* @tailwind base;
+@tailwind components;
+@tailwind utilities; */
+@import 'bootstrap/dist/css/bootstrap.min.css';
+@import '@fortawesome/fontawesome-free/css/all.min.css';
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+*{
+    margin:0;
+    padding:0;
+    box-sizing: border-box;
+    text-transform:capitalize;
+    font-family: "Montserrat", serif;
+}
+
+img{
+    width: 100%;
+}
+/* li{
+    list-style: none;
+} */
+
+
+.nav-link{
+    color:white !important;
+}
+
+.nav-link:hover{
+    text-decoration: underline;
+}
+.remove-file:hover{
+  transition: all .4s ease-in-out;
+  color:red;
+}
+.remove-file{
+    display: none;
+    right:20%;
+}
+.pdf-image{
+    width: 50px;
+    height: 50px;
+}
+.current_book:focus{
+    outline: none;
+    border-color: transparent;
+}
+
+.searchbar::placeholder{
+    font-size: smaller;
+    padding-left: 10px;
+}
