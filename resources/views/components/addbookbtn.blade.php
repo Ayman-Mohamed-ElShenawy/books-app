@@ -46,10 +46,6 @@
 </div>
 
 
-
-
-
-
 <script>
     $(document).ready(function() {
         $('.upload').on('change', function(event) {
