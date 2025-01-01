@@ -166,7 +166,23 @@ class BookController extends Controller
         }
     }
 
-   
+   /**
+    *  display search results for a book
+    */
+
+    public function searchResults(Request $request,Book $book):JsonResponse
+    {
+         $query = $request->input('query');
+
+        if($query){
+           $results= $book->Where('title','LIKE',"%$query%")->orWhere('author','LIKE',"%$query%")->orWhere('upload','LIKE',"%$query%")
+            ->limit(10)->get();
+        }
+        else{
+            $results=collect();
+        }
+        return response()->json($results);
+    }
 
 
 }

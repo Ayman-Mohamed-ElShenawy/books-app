@@ -10,8 +10,12 @@
         <div class="mt-3 col-12 col-md-3">
             <div class='title'>{{ $book->title }}</div>
             <div class='author'>{{ $book->author }}</div>
-            <a class='download-book' href="/storage/" download="{{ $book->upload }}">
-               download {{ $book->upload }}
+            <a class='download-book d-flex gap-2 align-items-center' href="/storage/" download="{{ $book->upload }}">
+                <div class= "pdf-image">
+                    <img src=../gallery/pdf-file-svgrepo-com.png alt=pdf image/>
+                </div>
+                    download {{ $book->upload }}
+                </div>
             </a>
             <div class='mt-2 status d-flex gap-1 fw-bold'>status:
                 <h6 class='text text-primary-emphasis mb-0' style="line-height: 1.4">
