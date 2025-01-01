@@ -6,8 +6,13 @@
         {{-- search bar --}}
         <div class="searchbar-wrapper position-relative">
             <form action="#" method="get">
-                <input type="text" class="searchbar rounded-pill focus-ring focus-ring-danger form-control" placeholder="search for a book">
+                <input type="text" class="searchbar rounded-pill form-control" placeholder="search for a book">
                 <button class='position-absolute bg-transparent p-2 top-0 end-0 outline-none border-0' ><i class="fas fa-magnifying-glass"></i></button>
+                 <ul hidden class="search-results position-absolute top-100 w-100 border border-dark-subtle  bg-white">
+                     <li><a href="#">link1</a></li>
+                     <li><a href="#">link2</a></li>
+                     <li><a href="#">link3</a></li>
+                 </ul>
             </form>
         </div>
         {{-- search bar --}}

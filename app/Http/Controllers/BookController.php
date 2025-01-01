@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Book;
+use Illuminate\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
@@ -78,9 +79,9 @@ class BookController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Book $book)
+    public function show(Book $book): View
     {
-        //
+        return view('searchbooks', compact('book'));
     }
 
     /**
@@ -165,9 +166,7 @@ class BookController extends Controller
         }
     }
 
-    /**
-     * search book
-     */
+   
 
 
 }

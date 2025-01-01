@@ -15,7 +15,6 @@
             <div class="modal-body">
                 <form action="{{ route('books.create') }}" method="POST" autocomplete="off">
                     @csrf
-                    <div class="success"></div>
                     <ul class='errors '>
                     </ul>
                     <div class="mb-3">
@@ -85,13 +84,17 @@
         async function fetchBooks() {
             try {
                 const response = await axios.get('http://127.0.0.1:8000/api/books');
+                
                 if (response && response.data && response.data.message.length > 0) {
-                    $('.show-books-container').empty();
+       
+                    $('.show-books-container').find('.found').show();
+                    $('.show-books-container').find('.not-found').hide();
                     $('.show-books').empty();
                     $.each(response.data.message, function(index, element) {
                         let user =
                             `
                          <div class='mt-3 fetched-books col-12 col-md-3'>
+                            
                             <div class='title'>${element.title}</div>
                             <div class='author'>${element.author}</div>
                             <a class='download-book' href="/storage/" download="${element.upload}">
@@ -113,23 +116,16 @@
                             </form>
                         </div>
                         `
-                        $('.show-books-container').append(`
-                        <h4 class='mt-3 text-danger-emphasis text-center'>available books</h4>
-                        <div class='row show-books'></div>`)
+                       
                         $('.show-books-container .show-books').append(user);
-
 
                     });
                 }
             } catch (error) {
                 if (error && error.response && error.response.status == 404) {
-                    $('.show-books-container').html(
-                        `
-                        <div class='not-found mt-3 text-center'>
-                         <h4 class='text text-danger-emphasis'>no books found</h4>
-                         </div>
-                                        `
-                    );
+                    $('.show-books').empty();
+                    $('.show-books-container').find('.not-found').show();
+                    $('.show-books-container').find('.found').hide();
                 }
 
             };
@@ -166,6 +162,7 @@
                 $('.upload').val('');
                 $('#addbookmodal .title , #addbookmodal .author').val('');
                 $('.preview-file').hide().find('.pdf-wrapper').remove();
+                $('.errors').removeClass('alert alert-danger').empty();
 
             });
         //update book 
@@ -200,6 +197,7 @@
                         );
                         $('#updatebookmodal .modal-body').find('input').val('');
                         $('#updatebookmodal').modal('hide');
+                        $('.preview-file').hide().find('.pdf-wrapper').remove();
                         setTimeout(() => {
                             $('.update-success').css({
                                 'transition': 'all .4s ease-in-out'
@@ -267,10 +265,8 @@
                     });
                     if (response && response.data && response.status == 200) {
                         fetchBooks();
-                        $('.success').empty();
-                        $('.success').addClass('alert alert-success');
-                        $('success').append(response.message);
                         $('#addbookmodal').modal('hide');
+                        $('.preview-file').hide().find('.pdf-wrapper').remove();
                         $('#addbookmodal').find('input').val('');
                     }
 
@@ -278,15 +274,9 @@
                     if (error && error.response && error.status == 422) {
                         $('.errors').empty();
                         $('.errors').addClass('alert alert-danger');
-                        $.each(error.responseJSON.errors, function(key,
-                            err_values) {
-                            $.each(err_values, function(index,
-                                message) {
-                                $('.errors').append("<li>" +
-                                    message +
-                                    "</li>");
-                            });
-                        });
+                         $.each(error.response.data.errors, function (index, element) { 
+                             $('.errors').append(`<li>${element}</li>`)
+                         });
                     }
                 }
             });

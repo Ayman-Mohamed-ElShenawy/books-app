@@ -9,6 +9,6 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
     Route::middleware(['auth:sanctum'])->group(function(){
-        Route::resource('books',BookController::class)->except('update');
+        Route::resource('books',BookController::class)->except('update','show');
         Route::post('books/{book}',[BookController::class,'update']);
     });

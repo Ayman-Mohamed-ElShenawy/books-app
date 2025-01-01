@@ -48,3 +48,19 @@ img{
     font-size: smaller;
     padding-left: 10px;
 }
+
+.search-results{
+    border-radius: 10px;
+}
+
+.search-results li {
+    list-style: none;
+    padding-top: 5px;
+}
+.search-results li a{
+    font-size: small;
+    text-decoration: none;
+}
+.search-results li a:hover{
+    text-decoration: underline;
+}

@@ -5,10 +5,11 @@
  @section('content')
 
 <div class="container show-books-container ">
-
-    <h4 class='mt-3 text-danger-emphasis text-center'>available books</h4>
+    <div ><h4  class='text-center mt-3 found text-danger-emphasis'>available books</h4></div>
     <div class="row show-books">
-    </div>    
+        
+    </div>
+    <div ><h4  class='text-center mt-3 not-found text-danger-emphasis'>no books available</h4></div>
 </div>
 
  @endsection
