@@ -195,9 +195,10 @@
                         $('.show-books-container').prepend(
                             `<div class='text-center mt-3 update-success alert alert-success'>Book Updated Successfully</div>`
                         );
-                        $('#updatebookmodal .modal-body').find('input').val('');
+                        $('#updatebookmodal .modal-body').find('.title , .author , .upload').val('');
                         $('#updatebookmodal').modal('hide');
                         $('.preview-file').hide().find('.pdf-wrapper').remove();
+                        $('#addbookmodal .modal-body').find('.title , .author , .upload').val('');
                         setTimeout(() => {
                             $('.update-success').css({
                                 'transition': 'all .4s ease-in-out'
@@ -208,13 +209,10 @@
                     }
                 } catch (error) {
                     if (error && error.response) {
-                        console.log(error);
-                        $.each(error.responseJSON, function(index, element) {
-                            // console.log(element);
-                            $('.title_error').text(element.title);
-                            $('.author_error').text(element.author);
-                            $('.upload_error').text(element.upload);
-                        });
+                            $('.title_error').text(error.response.data.errors.title);
+                            $('.author_error').text(error.response.data.errors.author);
+                            $('.upload_error').text(error.response.data.errors.upload);
+                        
                     }
                 }
             });
