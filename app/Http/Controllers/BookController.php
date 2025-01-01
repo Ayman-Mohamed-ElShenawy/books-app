@@ -18,12 +18,22 @@ class BookController extends Controller
      */
     public function index(Book $book): JsonResponse
     {
-        $books = $book->where('user_id', Auth::id())->get();
+        $books = $book->where('user_id', Auth::id())->paginate(8);
 
         if ($books->count() > 0) {
             return response()->json([
                 'status' => 200,
-                'message' => $books,
+                'message' => [
+                    'data' => $books->items(), // Only the paginated items
+                    'pagination' => [
+                        'current_page' => $books->currentPage(),
+                        'last_page' => $books->lastPage(),
+                        'per_page' => $books->perPage(),
+                        'total' => $books->total(),
+                        'prev_page_url' => $books->previousPageUrl(), // Add prev_page_url
+                        'next_page_url' => $books->nextPageUrl(), // Add next_page_url
+                    ],
+                ],
             ], 200);
         } else {
             return response()->json([

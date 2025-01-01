@@ -77,16 +77,15 @@
         });
         fetchBooks();
         //fetch books
-        async function fetchBooks() {
+        async function fetchBooks(url = 'http://127.0.0.1:8000/api/books') {
             try {
-                const response = await axios.get('http://127.0.0.1:8000/api/books');
-                
-                if (response && response.data && response.data.message.length > 0) {
-       
-                    $('.show-books-container').find('.found').show();
-                    $('.show-books-container').find('.not-found').hide();
+                // const response = await axios.get('http://127.0.0.1:8000/api/books');
+                const response = await axios.get(url);
+                if (response && response.data.message.data.length > 0) {
+                    $('.show-books-container .not-found').attr('hidden',true);
+                    $('.show-books-container .found').attr('hidden',false);
                     $('.show-books').empty();
-                    $.each(response.data.message, function(index, element) {
+                    $.each(response.data.message.data, function(index, element) {
                         let user =
                             `
                          <div class='mt-3 fetched-books col-12 col-md-3'>
@@ -112,16 +111,33 @@
                             </form>
                         </div>
                         `
-                       
                         $('.show-books-container .show-books').append(user);
 
                     });
+                    const pagination = response.data.message.pagination;
+                    $('.pagination-buttons').empty();
+                    if (pagination.prev_page_url) {
+                        $('.pagination-buttons').append(`
+                    <a data-url="${pagination.prev_page_url}" href="#" class='previous-page btn btn-outline-primary'>Previous</a>
+                     `);
+                    }
+                    if (pagination.next_page_url) {
+                        $('.pagination-buttons').append(`
+                    <a data-url="${pagination.next_page_url}" href="#" class='next-page btn btn-outline-warning'>Next</a>
+                    `);
+                    }
+                    $(document).on('click', '.previous-page, .next-page', function(e) {
+                        e.preventDefault();
+                        const url = $(this).attr('data-url');
+                        fetchBooks(url);
+                    })
                 }
             } catch (error) {
                 if (error && error.response && error.response.status == 404) {
+                    $('.show-books-container .found').attr('hidden',true);
+                    $('.show-books-container .not-found').attr('hidden',false);
                     $('.show-books').empty();
-                    $('.show-books-container').find('.not-found').show();
-                    $('.show-books-container').find('.found').hide();
+                  
                 }
 
             };
@@ -191,10 +207,12 @@
                         $('.show-books-container').prepend(
                             `<div class='text-center mt-3 update-success alert alert-success'>Book Updated Successfully</div>`
                         );
-                        $('#updatebookmodal .modal-body').find('.title , .author , .upload').val('');
+                        $('#updatebookmodal .modal-body').find('.title , .author , .upload')
+                            .val('');
                         $('#updatebookmodal').modal('hide');
                         $('.preview-file').hide().find('.pdf-wrapper').remove();
-                        $('#addbookmodal .modal-body').find('.title , .author , .upload').val('');
+                        $('#addbookmodal .modal-body').find('.title , .author , .upload').val(
+                            '');
                         setTimeout(() => {
                             $('.update-success').css({
                                 'transition': 'all .4s ease-in-out'
@@ -205,10 +223,10 @@
                     }
                 } catch (error) {
                     if (error && error.response) {
-                            $('.title_error').text(error.response.data.errors.title);
-                            $('.author_error').text(error.response.data.errors.author);
-                            $('.upload_error').text(error.response.data.errors.upload);
-                        
+                        $('.title_error').text(error.response.data.errors.title);
+                        $('.author_error').text(error.response.data.errors.author);
+                        $('.upload_error').text(error.response.data.errors.upload);
+
                     }
                 }
             });
@@ -268,9 +286,9 @@
                     if (error && error.response && error.status == 422) {
                         $('.errors').empty();
                         $('.errors').addClass('alert alert-danger');
-                         $.each(error.response.data.errors, function (index, element) { 
-                             $('.errors').append(`<li>${element}</li>`)
-                         });
+                        $.each(error.response.data.errors, function(index, element) {
+                            $('.errors').append(`<li>${element}</li>`)
+                        });
                     }
                 }
             });
