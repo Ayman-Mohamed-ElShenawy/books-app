@@ -11,5 +11,6 @@ Route::get('/user', function (Request $request) {
     Route::middleware(['auth:sanctum'])->group(function(){
         Route::resource('books',BookController::class)->except('update','show');
         Route::post('books/{book}',[BookController::class,'update']);
-        Route::get('search',[BookController::class,'searchResults'])->name('book.search');
     });
+
+    Route::get('search',[BookController::class,'searchResults'])->name('book.search');

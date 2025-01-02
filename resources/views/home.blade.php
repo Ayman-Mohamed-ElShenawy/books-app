@@ -82,7 +82,7 @@
                                         'Content-Type': 'application/json',
                                     },
                                 })
-                            if (response && response.data) {
+                            if (response && response.data.length > 0) {
                                 // add the search results to search results container
                                 $('.search-results').empty();
                                 $.each(response.data, function(index, book) {
@@ -95,6 +95,9 @@
                                     );
                                 });
                             }
+                     
+                           
+                           
                         } catch (error) {
                             if (error && error.response) {
                                 console.log(error)
@@ -108,12 +111,16 @@
                 e.preventDefault();
                 let bookId = $('.search-item').data('id');
                 let formAction = `http://127.0.0.1:8000/searchbooks/${bookId}`;
-                let searchForm = $('#search-form').attr('action', formAction);
+                let searchForm = $('#search-form').attr('action', formAction);  
                 searchForm.submit();
+                if(typeof bookId==='undefined'){
+                    window.location.href='http://127.0.0.1:8000/noresults';
+                    
+                }
             });
 
             $(document).on('click', '.search-item', function(e) {
-                console.log('clicked');
+                // console.log('clicked');
                 e.preventDefault();
                 $('.search-results').attr('hidden', true);
                 $('.searchbar').val($(this).text());
