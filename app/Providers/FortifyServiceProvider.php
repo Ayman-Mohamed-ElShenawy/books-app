@@ -34,6 +34,8 @@ class FortifyServiceProvider extends ServiceProvider
         $this->app->instance(LoginResponse::class, new class implements LoginResponse {
             public function toResponse($request)
             {
+                $isAdmin = Auth::check() && Auth::user()->role === 'admin';
+                session()->put('role', $isAdmin ? 'admin' : null);
                 session()->flash('success', 'You Have Logged in Successfully');
                 return redirect("/");
             }
@@ -41,8 +43,8 @@ class FortifyServiceProvider extends ServiceProvider
         $this->app->instance(LogoutResponse::class, new class implements LogoutResponse {
             public function toResponse($request)
             {
-                if(session('role')){
-                    session()->pull('role');
+                if(session('role') && session()->get('role')==='admin'){
+                    session()->forget('role');
                 }
                 session()->flash('success', 'You Have Logged out Successfully');
                 return redirect('/');

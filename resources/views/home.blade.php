@@ -17,6 +17,7 @@
         </div>
     @endguest
     @auth
+ 
         <div class="container text-center mt-4">
 
             @if (session('register'))

@@ -23,15 +23,11 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                 @auth
-
-                @if (session('role'))
-                <li>
-                    <a class='nav-link'  href="{{ route('show.users') }}">show users</a>
-                </li>
-                @endif
-                    
-                 
-
+                    @if (session('role'))
+                        <li>
+                            <a class='nav-link' href="{{ route('show.users') }}">show users</a>
+                        </li>
+                    @endif
                     <li class="nav-item">
                         <a class="nav-link active" href="{{ url('books') }}">show books</a>
                     </li>

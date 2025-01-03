@@ -20,54 +20,35 @@ class BookController extends Controller
      */
     public function index(Book $book, User $user): JsonResponse
     {
-        if ($user->role === 'user') {
-            $books = $book->where('user_id', Auth::id())->paginate(8);
+        $user = Auth::user();
 
-            if ($books->count() > 0) {
-                return response()->json([
-                    'status' => 200,
-                    'message' => [
-                        'data' => $books->items(), // Only the paginated items
-                        'pagination' => [
-                            'current_page' => $books->currentPage(),
-                            'last_page' => $books->lastPage(),
-                            'per_page' => $books->perPage(),
-                            'total' => $books->total(),
-                            'prev_page_url' => $books->previousPageUrl(), // Add prev_page_url
-                            'next_page_url' => $books->nextPageUrl(), // Add next_page_url
-                        ],
-                    ],
-                ], 200);
-            } else {
-                return response()->json([
-                    'status' => 404,
-                    'message' => 'No Books Found',
-                ], 404);
-            }
+        if ($user->role === 'admin') {
+            $books = $book->paginate(8);
         } else {
-            $books = Book::paginate(8);
-            if ($books->count() > 0) {
-                return response()->json([
-                    'status' => 200,
-                    'message' => [
-                            'data' => $books->items(), // Only the paginated items
-                            'pagination' => [
-                                    'current_page' => $books->currentPage(),
-                                    'last_page' => $books->lastPage(),
-                                    'per_page' => $books->perPage(),
-                                    'total' => $books->total(),
-                                    'prev_page_url' => $books->previousPageUrl(), // Add prev_page_url
-                                    'next_page_url' => $books->nextPageUrl(), // Add next_page_url
-                                ],
-                        ],
-                ], 200);
-            } else {
-                return response()->json([
-                    'status' => 404,
-                    'message' => 'No Books Found',
-                ], 404);
-            }
+            $books = $book->where('user_id', $user->id)->paginate(8);
         }
+
+        if ($books->count() > 0) {
+            return response()->json([
+                'status' => 200,
+                'message' => [
+                    'data' => $books->items(),
+                    'pagination' => [
+                        'current_page' => $books->currentPage(),
+                        'last_page' => $books->lastPage(),
+                        'per_page' => $books->perPage(),
+                        'total' => $books->total(),
+                        'prev_page_url' => $books->previousPageUrl(),
+                        'next_page_url' => $books->nextPageUrl(),
+                    ],
+                ],
+            ], 200);
+        }
+
+        return response()->json([
+            'status' => 404,
+            'message' => 'No Books Found',
+        ], 404);
 
     }
 
@@ -224,7 +205,7 @@ class BookController extends Controller
      * display other users data to to current user
      */
     public function otherUsersData(Book $book): View
-    {
+    {  
         $books = Book::all();
         return view('home', compact('books'));
     }
@@ -233,8 +214,7 @@ class BookController extends Controller
      */
     public function showUsers(): View
     {
-        $role = User::where('role','admin')->get();
-        Session::put('role',$role);
+         
         $users = User::all();
         return view('showusers', compact('users'));
     }
