@@ -23,7 +23,7 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                 @auth
-                    @if (session('role'))
+                    @if (Auth::user()->role==='admin')
                         <li>
                             <a class='nav-link' href="{{ route('show.users') }}">show users</a>
                         </li>
