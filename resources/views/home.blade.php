@@ -17,21 +17,57 @@
         </div>
     @endguest
     @auth
-        <div class="container mt-4">
+        <div class="container text-center mt-4">
 
             @if (session('register'))
-                <div class="alert alert-success text-center">
+                <div class="alert alert-success ">
                     {{ session('register') }}
                 </div>
             @endif
 
             @if (session('success'))
-                <div class="alert alert-primary text-center">{{ session('success') }}</div>
+                <div class="alert alert-primary ">{{ session('success') }}</div>
             @endif
-            <div class="home-title text-primary mt-4 container text-center">
+            <div class="home-title text-primary mt-4  ">
                 <h5>welcome {{ Auth::user()->name }}</h5>
             </div>
         </div>
+        @if ($books->count() > 0)
+        <div class="container mt-3">
+            <div class="row ">
+                @foreach ($books as $book)
+                    <div class="col-12 col-md-3">
+                        <div class='title'>{{ $book->title }}</div>
+                        <div class='author'>{{ $book->author }}</div>
+                        <a class='download-book d-flex gap-2 align-items-center' href="/storage/"
+                            download="{{ $book->upload }}">
+                            <div class= "pdf-image">
+                                <img src=../gallery/pdf-file-svgrepo-com.png alt=pdf image />
+                            </div>
+
+                            download {{ $book->upload }}
+                        </a>
+                        <div class='mt-2 status d-flex gap-1 fw-bold'>status:
+                            <h6 class='text text-primary-emphasis mb-0' style="line-height: 1.4">
+                                {{ $book->status }}
+                            </h6>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+        @else
+            <div class="container text-center">
+                <div class="row">
+                    <div class="col-12 col-md-12">
+                        <h5 class='text-success-emphasis mt-3'>
+                            No contributions from other users available
+                        </h5>
+                    </div>
+                </div>
+            </div>
+        @endif
+      
     @endauth
     <script>
         $(document).ready(function() {
@@ -95,9 +131,9 @@
                                     );
                                 });
                             }
-                     
-                           
-                           
+
+
+
                         } catch (error) {
                             if (error && error.response) {
                                 console.log(error)
@@ -111,11 +147,11 @@
                 e.preventDefault();
                 let bookId = $('.search-item').data('id');
                 let formAction = `http://127.0.0.1:8000/searchbooks/${bookId}`;
-                let searchForm = $('#search-form').attr('action', formAction);  
+                let searchForm = $('#search-form').attr('action', formAction);
                 searchForm.submit();
-                if(typeof bookId==='undefined'){
-                    window.location.href='http://127.0.0.1:8000/noresults';
-                    
+                if (typeof bookId === 'undefined') {
+                    window.location.href = 'http://127.0.0.1:8000/noresults';
+
                 }
             });
 

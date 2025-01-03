@@ -7,10 +7,12 @@
         <div class="searchbar-wrapper position-relative">
             <form id='search-form' action="" method="get">
                 <input type="text" class="searchbar rounded-pill form-control" placeholder="search for a book">
-                <button type="submit" class='position-absolute make-search bg-transparent p-2 top-0 end-0 outline-none border-0' ><i class="fas fa-magnifying-glass"></i></button>
-                 <ul  hidden class="search-results position-absolute top-100 w-100 border border-dark-subtle bg-white">
-                  
-                 </ul>
+                <button type="submit"
+                    class='position-absolute make-search bg-transparent p-2 top-0 end-0 outline-none border-0'><i
+                        class="fas fa-magnifying-glass"></i></button>
+                <ul hidden class="search-results position-absolute top-100 w-100 border border-dark-subtle bg-white">
+
+                </ul>
             </form>
         </div>
         {{-- search bar --}}
@@ -21,17 +23,25 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                 @auth
+
+                @if (session('role'))
+                <li>
+                    <a class='nav-link'  href="{{ route('show.users') }}">show users</a>
+                </li>
+                @endif
+                    
+                 
+
                     <li class="nav-item">
                         <a class="nav-link active" href="{{ url('books') }}">show books</a>
                     </li>
-                  <li>
-                    <x-addbookbtn></x-addbookbtn>
-                  </li>
-                  
-                  <li >
-                    <x-updatebookmodal ></x-updatebookmodal>
-                  </li>
+                    <li>
+                        <x-addbookbtn></x-addbookbtn>
+                    </li>
 
+                    <li>
+                        <x-updatebookmodal></x-updatebookmodal>
+                    </li>
 
                     <li class="nav-item">
                         <form action="{{ route('logout') }}" method="post">

@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Book;
+use App\Models\User;
 use Illuminate\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 
 
 
@@ -16,30 +18,55 @@ class BookController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Book $book): JsonResponse
+    public function index(Book $book, User $user): JsonResponse
     {
-        $books = $book->where('user_id', Auth::id())->paginate(8);
+        if ($user->role === 'user') {
+            $books = $book->where('user_id', Auth::id())->paginate(8);
 
-        if ($books->count() > 0) {
-            return response()->json([
-                'status' => 200,
-                'message' => [
-                    'data' => $books->items(), // Only the paginated items
-                    'pagination' => [
-                        'current_page' => $books->currentPage(),
-                        'last_page' => $books->lastPage(),
-                        'per_page' => $books->perPage(),
-                        'total' => $books->total(),
-                        'prev_page_url' => $books->previousPageUrl(), // Add prev_page_url
-                        'next_page_url' => $books->nextPageUrl(), // Add next_page_url
+            if ($books->count() > 0) {
+                return response()->json([
+                    'status' => 200,
+                    'message' => [
+                        'data' => $books->items(), // Only the paginated items
+                        'pagination' => [
+                            'current_page' => $books->currentPage(),
+                            'last_page' => $books->lastPage(),
+                            'per_page' => $books->perPage(),
+                            'total' => $books->total(),
+                            'prev_page_url' => $books->previousPageUrl(), // Add prev_page_url
+                            'next_page_url' => $books->nextPageUrl(), // Add next_page_url
+                        ],
                     ],
-                ],
-            ], 200);
+                ], 200);
+            } else {
+                return response()->json([
+                    'status' => 404,
+                    'message' => 'No Books Found',
+                ], 404);
+            }
         } else {
-            return response()->json([
-                'status' => 404,
-                'message' => 'No Books Found',
-            ], 404);
+            $books = Book::paginate(8);
+            if ($books->count() > 0) {
+                return response()->json([
+                    'status' => 200,
+                    'message' => [
+                            'data' => $books->items(), // Only the paginated items
+                            'pagination' => [
+                                    'current_page' => $books->currentPage(),
+                                    'last_page' => $books->lastPage(),
+                                    'per_page' => $books->perPage(),
+                                    'total' => $books->total(),
+                                    'prev_page_url' => $books->previousPageUrl(), // Add prev_page_url
+                                    'next_page_url' => $books->nextPageUrl(), // Add next_page_url
+                                ],
+                        ],
+                ], 200);
+            } else {
+                return response()->json([
+                    'status' => 404,
+                    'message' => 'No Books Found',
+                ], 404);
+            }
         }
 
     }
@@ -176,23 +203,40 @@ class BookController extends Controller
         }
     }
 
-   /**
-    *  display search results for a book
-    */
+    /**
+     *  display search results for a book
+     */
 
-    public function searchResults(Request $request,Book $book):JsonResponse
+    public function searchResults(Request $request, Book $book): JsonResponse
     {
-         $query = $request->input('query');
+        $query = $request->input('query');
 
-        if($query){
-           $results= $book->Where('title','LIKE',"%$query%")->orWhere('author','LIKE',"%$query%")->orWhere('upload','LIKE',"%$query%")
-            ->limit(10)->get();
-        }
-        else{
-            $results=collect();
+        if ($query) {
+            $results = $book->Where('title', 'LIKE', "%$query%")->orWhere('author', 'LIKE', "%$query%")->orWhere('upload', 'LIKE', "%$query%")
+                ->limit(10)->get();
+        } else {
+            $results = collect();
         }
         return response()->json($results);
     }
 
+    /**
+     * display other users data to to current user
+     */
+    public function otherUsersData(Book $book): View
+    {
+        $books = Book::all();
+        return view('home', compact('books'));
+    }
+    /**
+     * show all users
+     */
+    public function showUsers(): View
+    {
+        $role = User::where('role','admin')->get();
+        Session::put('role',$role);
+        $users = User::all();
+        return view('showusers', compact('users'));
+    }
 
 }

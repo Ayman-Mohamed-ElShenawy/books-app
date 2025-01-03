@@ -41,6 +41,9 @@ class FortifyServiceProvider extends ServiceProvider
         $this->app->instance(LogoutResponse::class, new class implements LogoutResponse {
             public function toResponse($request)
             {
+                if(session('role')){
+                    session()->pull('role');
+                }
                 session()->flash('success', 'You Have Logged out Successfully');
                 return redirect('/');
             }

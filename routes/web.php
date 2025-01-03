@@ -3,9 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BookController;
 
-Route::get('/', function () {
-    return view('home');
-});
+Route::get('/',[BookController::class,'otherUsersData']);
 
 Route::middleware(['guest'])->group(function(){
 
@@ -30,6 +28,10 @@ Route::middleware(['auth.basic'])->group(function(){
     Route::get('newbook',function(){
         return view('addbook');
     });
+    Route::get('showusers',[BookController::class,'showUsers'])->name('show.users');
+    
+
+  
    
 });
 
